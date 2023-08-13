@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cooperative Canvas</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Cooperative Canvas</h1>
+    <div id="canvas-container">
+        <canvas id="canvas"></canvas>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+CSS (styles.css):
+
+css
+Copy code
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+h1 {
+    text-align: center;
+    padding: 20px;
+}
+
+#canvas-container {
+    display: flex;
+    justify-content: center;
+}
+
+#canvas {
+    border: 2px solid #000;
+}
+JavaScript (script.js):
+
+js
+Copy code
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+const colors = ["red", "blue", "green", "purple", "orange"];
+let currentColor = 0;
+
+canvas.width = window.innerWidth - 40;
+canvas.height = window.innerHeight - 150;
+
+ctx.lineWidth = 5;
+ctx.lineCap = "round";
+
+let drawing = false;
+
+canvas.addEventListener("mousedown", (e) => {
+    drawing = true;
+    ctx.beginPath();
+    ctx.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+});
+
+canvas.addEventListener("mousemove", (e) => {
+    if (!drawing) return;
+
+    ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+    ctx.strokeStyle = colors[currentColor];
+    ctx.stroke();
+});
+
+canvas.addEventListener("mouseup", () => {
+    drawing = false;
+    ctx.closePath();
+});
+
+canvas.addEventListener("mouseleave", () => {
+    drawing = false;
+    ctx.closePath();
+});
+
+// Change color when the canvas is clicked
+canvas.addEventListener("click", () => {
+    currentColor = (currentColor + 1) % colors.length;
+});
